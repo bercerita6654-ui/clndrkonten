@@ -211,28 +211,34 @@
         // Gabungkan semua event
         const allEvents = [...holidayData, ...schoolMoments, ...promoData, ...regionalMoments];
 
-        // Data Rutin Harian & Prompt yang disesuaikan untuk format POSTER dalam Bahasa Indonesia
-        const promptSuffix = `desain poster profesional, gaya pop art modern yang cerah, ada area kosong (copy space) untuk menulis teks, warna eye-catching, sangat detail, 8k --ar 4:5`;
-        const promptSuffixSquare = `desain poster promosi profesional, gaya pop art modern yang cerah, ada area kosong (copy space) untuk menulis teks, warna eye-catching, sangat detail, 8k --ar 1:1`;
+        let currentAR = "4:5";
+        let currentStyle = "fotografi produk estetik dan profesional";
+
+        window.updatePromptSettings = function() {
+            currentAR = document.getElementById('arSelect').value;
+            currentStyle = document.getElementById('styleSelect').value;
+            renderDetails(); // Render ulang detail agar prompt ter-update
+            lucide.createIcons();
+        }
 
         const dailyIdeas = [
-            { dayName: "Minggu", topic: "Relax, Journaling & Prep", format: "Aesthetic Video / Photo", description: "Konten santai. Tunjukkan ide journaling untuk self-care (me-time), atau ingatkan followers untuk mempersiapkan tas, binder, dan alat tulis untuk sekolah/kerja besok.", hashtags: "#SundayVibes #JournalingIdeas #PersiapanSekolah", imagePrompt: `Poster santai hari Minggu, buku bullet journal terbuka dengan coretan estetik, dikelilingi spidol warna-warni dan selimut lembut, gaya fotografi Pinterest, ${promptSuffix}` },
-            { dayName: "Senin", topic: "Monday Motivation & Planning", format: "Carousel / Single Image", description: "Awali minggu dengan produktif! Bagikan quote motivasi kerja/belajar yang ditulis tangan (lettering). Tampilkan buku agenda atau sticky notes.", hashtags: "#MondayMotivation #PlannerAddict #SemangatSenin", imagePrompt: `Poster motivasi produktif, meja kerja yang cerah dan rapi, buku planner mingguan terbuka, sticky notes neon di laptop yang elegan, suasana penuh semangat, ${promptSuffixSquare}` },
-            { dayName: "Selasa", topic: "Tips & Trik Edukatif", format: "Reels / Infografis", description: "Bagikan tips seputar alat tulis. Contoh: 'Cara menghilangkan noda tinta', 'Perbedaan pulpen gel vs ballpoint', atau 'Tips mencatat estetik'.", hashtags: "#TipsATK #StudygramIndonesia #AlatTulis", imagePrompt: `Poster infografis edukasi, fotografi makro jarak dekat yang membedakan ujung pulpen gel dan ujung ballpoint saat menulis di atas kertas premium, pencahayaan dinamis, ${promptSuffix}` },
-            { dayName: "Rabu", topic: "Product Spotlight / Review", format: "Video Pendek / Photo Post", description: "Fokus pada satu produk unggulan. Tunjukkan detailnya (swatches warna spidol, ketebalan kertas). Buat review jujur atau repost testimoni.", hashtags: "#ReviewAlatTulis #RekomendasiATK", imagePrompt: `Poster review produk, kertas tebal berisi coretan swatch warna-warni dari spidol kuas, spidol diletakkan rapi di sebelahnya, pencahayaan studio yang terang, ${promptSuffixSquare}` },
-            { dayName: "Kamis", topic: "Interaksi & Engagement", format: "Instagram Story / Polling", description: "Buat game 'This or That' (Pulpen Biru vs Hitam, Buku Garis vs Polos). Atau tebak-tebakan seputar perlengkapan sekolah/kantor.", hashtags: "#StationeryAddict #Interaksi #BukuTulis", imagePrompt: `Poster interaktif this or that, komposisi layar terbelah menampilkan pulpen violet elegan di sisi kiri dan pulpen pink cerah di sisi kanan, fotografi produk estetik, ${promptSuffixSquare}` },
-            { dayName: "Jumat", topic: "Promo & Bundling Akhir Pekan", format: "Poster Promo / Flash Sale", description: "Sambut akhir pekan dengan penawaran khusus. Promosikan 'Paket Hemat Sekolah', diskon ongkir akhir pekan, atau promo Jumat Berkah.", hashtags: "#PromoATK #DiskonStationery #FlashSale", imagePrompt: `Poster promosi flash sale, tumpukan set alat tulis yang dibungkus cantik diikat dengan pita neon, gambar penawaran e-commerce yang sangat menarik perhatian, ${promptSuffix}` },
-            { dayName: "Sabtu", topic: "Behind the Scenes (BTS) & Hiburan", format: "Reels / TikTok (ASMR)", description: "Buat video ASMR packing orderan pelanggan, merapikan stok barang di rak toko, atau sekadar membagikan suasana toko yang estetik di akhir pekan.", hashtags: "#SmallBusinessIndonesia #PackingOrders #ASMR", imagePrompt: `Poster behind the scenes estetik, seseorang sedang membungkus pesanan produk alat tulis dengan kertas ramah lingkungan, lampu hangat yang mengundang, suasana bisnis kecil kekinian, ${promptSuffixSquare}` }
+            { dayName: "Minggu", topic: "Relax, Journaling & Prep", format: "Aesthetic Video / Photo", description: "Konten santai. Tunjukkan ide journaling untuk self-care (me-time), atau ingatkan followers untuk mempersiapkan tas, binder, dan alat tulis untuk sekolah/kerja besok.", hashtags: "#SundayVibes #JournalingIdeas #PersiapanSekolah", basePrompt: "buku bullet journal terbuka dengan coretan estetik, dikelilingi alat tulis dan selimut lembut, suasana santai hari Minggu" },
+            { dayName: "Senin", topic: "Monday Motivation & Planning", format: "Carousel / Single Image", description: "Awali minggu dengan produktif! Bagikan quote motivasi kerja/belajar yang ditulis tangan (lettering). Tampilkan buku agenda atau sticky notes.", hashtags: "#MondayMotivation #PlannerAddict #SemangatSenin", basePrompt: "meja kerja yang cerah dan rapi, buku planner mingguan terbuka, sticky notes di laptop, suasana produktif dan penuh semangat" },
+            { dayName: "Selasa", topic: "Tips & Trik Edukatif", format: "Reels / Infografis", description: "Bagikan tips seputar alat tulis. Contoh: 'Cara menghilangkan noda tinta', 'Perbedaan pulpen gel vs ballpoint', atau 'Tips mencatat estetik'.", hashtags: "#TipsATK #StudygramIndonesia #AlatTulis", basePrompt: "tampilan jarak dekat membedakan ujung pulpen gel dan ujung ballpoint saat menulis di atas kertas premium, fokus makro yang informatif" },
+            { dayName: "Rabu", topic: "Product Spotlight / Review", format: "Video Pendek / Photo Post", description: "Fokus pada satu produk unggulan. Tunjukkan detailnya (swatches warna spidol, ketebalan kertas). Buat review jujur atau repost testimoni.", hashtags: "#ReviewAlatTulis #RekomendasiATK", basePrompt: "kertas tebal berisi coretan swatch warna-warni dari spidol, spidol diletakkan rapi di sebelahnya, tampilan produk yang memukau" },
+            { dayName: "Kamis", topic: "Interaksi & Engagement", format: "Instagram Story / Polling", description: "Buat game 'This or That' (Pulpen Biru vs Hitam, Buku Garis vs Polos). Atau tebak-tebakan seputar perlengkapan sekolah/kantor.", hashtags: "#StationeryAddict #Interaksi #BukuTulis", basePrompt: "komposisi layar terbelah menampilkan dua jenis pulpen elegan yang berbeda di kiri dan kanan untuk perbandingan interaktif" },
+            { dayName: "Jumat", topic: "Promo & Bundling Akhir Pekan", format: "Poster Promo / Flash Sale", description: "Sambut akhir pekan dengan penawaran khusus. Promosikan 'Paket Hemat Sekolah', diskon ongkir akhir pekan, atau promo Jumat Berkah.", hashtags: "#PromoATK #DiskonStationery #FlashSale", basePrompt: "tumpukan set alat tulis yang dibungkus cantik diikat dengan pita, penataan promosi flash sale e-commerce yang mengundang klik" },
+            { dayName: "Sabtu", topic: "Behind the Scenes (BTS) & Hiburan", format: "Reels / TikTok (ASMR)", description: "Buat video ASMR packing orderan pelanggan, merapikan stok barang di rak toko, atau sekadar membagikan suasana toko yang estetik di akhir pekan.", hashtags: "#SmallBusinessIndonesia #PackingOrders #ASMR", basePrompt: "seseorang sedang membungkus pesanan produk alat tulis dengan kertas ramah lingkungan, suasana meja kerja bisnis kecil yang estetik" }
         ];
 
         const generateContentIdea = (event) => {
             if (event.type === 'promo') {
                 return {
                     topic: `Campaign Mega Sale ${event.name}`,
-                    format: "Poster Promo / Live Shopping / Reels",
-                    description: `Waktunya dorong penjualan! Siapkan 'Paket Bundling ATK', Flash Sale buku & pulpen, dan ingatkan followers untuk klaim voucher Gratis Ongkir. Lakukan Live Shopping untuk konversi maksimal.`,
+                    format: "Poster Promo / Live Shopping",
+                    description: `Waktunya dorong penjualan! Siapkan 'Paket Bundling ATK', Flash Sale buku & pulpen, dan ingatkan followers untuk klaim voucher Gratis Ongkir.`,
                     hashtags: `#PromoATK #DiskonAlatTulis #Promo${event.date}${event.month+1}`,
-                    imagePrompt: `Poster promosi e-commerce 3D yang cerah untuk produk alat tulis, menampilkan buku catatan dan pulpen neon melayang, teks 3D bersinar bertuliskan "MEGA SALE", layout dinamis, ${promptSuffixSquare}`
+                    basePrompt: `promosi e-commerce untuk produk alat tulis, menampilkan buku catatan dan pulpen melayang, teks 3D bersinar bertuliskan "MEGA SALE"`
                 };
             }
 
@@ -240,81 +246,81 @@
                 "Tahun Baru 2026 Masehi": {
                     topic: "Resolusi & Perencanaan Baru",
                     format: "Reels / Carousel",
-                    description: "Tunjukkan koleksi planner, buku catatan, dan pulpen premium untuk memulai tahun dengan rapi. Ajakan: 'Apa resolusi menulismu tahun ini?'",
+                    description: "Tunjukkan koleksi planner, buku catatan, dan pulpen premium untuk memulai tahun dengan rapi.",
                     hashtags: "#TahunBaru #Resolusi2026 #PlannerAddict",
-                    imagePrompt: `Poster ucapan tahun baru, flat lay buku planner 2026 modern yang kosong, dikelilingi pulpen premium berwarna-warni dan konfeti perayaan, estetika energik, ${promptSuffix}`
+                    basePrompt: `flat lay buku planner 2026 modern yang kosong, dikelilingi pulpen premium dan konfeti perayaan tahun baru`
                 },
                 "Hari Suci Nyepi (Tahun Baru Saka 1948)": {
                     topic: "Ketenangan & Menulis Reflektif",
                     format: "Quote Graphic",
                     description: "Quote tentang ketenangan dan pentingnya menulis jurnal saat hening. Promosikan buku jurnal blank/dotted.",
                     hashtags: "#Nyepi #Journaling #Mindfulness",
-                    imagePrompt: `Poster bernuansa tenang, satu buku jurnal kosong berkualitas tinggi dan pulpen elegan di atas meja, pencahayaan redup yang estetik dan reflektif, suasana hening, ${promptSuffix}`
+                    basePrompt: `satu buku jurnal kosong dan pulpen elegan di atas meja kayu, suasana hening, damai, dan reflektif`
                 },
                 "Idul Fitri 1447 H": {
                     topic: "Kartu Ucapan & Hampers Lebaran",
                     format: "Video Tutorial / Carousel",
                     description: "Tutorial membuat kartu ucapan lebaran DIY. Tawarkan 'Hampers ATK Estetik' untuk hadiah anak/keponakan.",
-                    hashtags: "#IdulFitri #Lebaran #HampersLebaran #KartuUcapan",
-                    imagePrompt: `Poster ucapan hari raya Idul Fitri yang indah, kartu ucapan buatan tangan dengan kaligrafi elegan, dikelilingi alat seni dan kotak hadiah yang dibungkus rapi, pencahayaan gembira, ${promptSuffixSquare}`
+                    hashtags: "#IdulFitri #Lebaran #HampersLebaran",
+                    basePrompt: `kartu ucapan hari raya buatan tangan dengan kaligrafi elegan, dikelilingi kotak hadiah yang dibungkus rapi`
                 },
                 "Idul Adha 1447 H": {
                     topic: "Semangat Berkurban & Berbagi",
                     format: "Quote / Carousel",
                     description: "Ucapan Idul Adha. Sisipkan ide berbagi dengan mendonasikan alat tulis ke panti asuhan.",
                     hashtags: "#IdulAdha #BerbagiKebaikan #AlatTulis",
-                    imagePrompt: `Poster donasi amal, kotak hadiah alat tulis warna-warni yang dibungkus indah siap untuk didonasikan, dikelilingi pita lembut, suasana hangat dan penuh kepedulian, ${promptSuffix}`
+                    basePrompt: `kotak hadiah donasi berisi alat tulis rapi, dikelilingi pita, suasana hangat penuh kepedulian`
                 },
                 "Proklamasi Kemerdekaan RI": {
                     topic: "Semangat Kemerdekaan & Lomba",
                     format: "Giveaway / Reel",
                     description: "Giveaway produk ATK. Tunjukkan alat lukis/gambar untuk persiapan lomba 17-an di sekolah.",
                     hashtags: "#HUTRI #17Agustus #LombaGambar",
-                    imagePrompt: `Poster perayaan hari kemerdekaan yang dinamis, tata letak alat seni kreatif, pensil warna merah putih, dan cat, estetika kebanggaan nasional yang energik, ${promptSuffixSquare}`
+                    basePrompt: `tata letak alat seni kreatif, pensil warna dan cat, estetika kebanggaan nasional yang energik`
                 },
                 "Awal Semester Genap": {
                     topic: "Restock Kebutuhan Sekolah",
                     format: "Checklist Graphic",
                     description: "Checklist barang yang sering habis di tengah tahun (isi binder, pulpen tinta). Promo bundle hemat semester genap.",
                     hashtags: "#SemesterGenap #BackToSchool",
-                    imagePrompt: `Poster kembali ke sekolah, flat lay perlengkapan sekolah esensial yang rapi dan berwarna, kertas binder, stabilo neon, tip-ex, desain bersih dan cerah, ${promptSuffix}`
+                    basePrompt: `flat lay perlengkapan sekolah esensial yang rapi, kertas binder, stabilo, tip-ex, susunan rapi siap sekolah`
                 },
                 "Tahun Ajaran Baru / Back to School": {
                     topic: "Persiapan Back to School",
                     format: "Live Shopping / Video Tour",
-                    description: "Momen puncak! Video unboxing tas sekolah dan bundle alat tulis lengkap. Kampanye 'Siap Sekolah'.",
+                    description: "Momen puncak! Video unboxing tas sekolah dan bundle alat tulis lengkap.",
                     hashtags: "#BackToSchool #TahunAjaranBaru",
-                    imagePrompt: `Poster promosi diskon 3D yang seru, tas ransel sekolah trendi yang terbuka dengan buku catatan dan spidol warna-warni berhamburan keluar dengan riang, render 8k, ${promptSuffixSquare}`
+                    basePrompt: `tas ransel sekolah trendi terbuka dengan buku catatan dan spidol berhamburan keluar dengan riang`
                 },
                 "Hari Guru Nasional": {
                     topic: "Apresiasi Pahlawan Pendidikan",
                     format: "Gift Guide",
                     description: "Ide hadiah elegan untuk guru: Pulpen eksklusif, agenda. Diskon khusus untuk guru.",
                     hashtags: "#HariGuruNasional #KadoUntukGuru",
-                    imagePrompt: `Poster apresiasi elegan, kotak hadiah berisi pulpen mahal warna-warni dan buku agenda premium di atas meja bersih, pencahayaan dinamis dan berkelas, ${promptSuffix}`
+                    basePrompt: `kotak hadiah elegan berisi pulpen mahal dan buku agenda premium di atas meja, apresiasi pahlawan pendidikan`
                 },
                 "Hari Raya Saraswati": {
                     topic: "Hari Ilmu Pengetahuan",
                     format: "Quote Graphic / Promo",
                     description: "Rahajeng Saraswati! Tawarkan diskon khusus untuk pelajar (buku tulis, alat lukis, dan kaligrafi).",
                     hashtags: "#Saraswati #IlmuPengetahuan",
-                    imagePrompt: `Poster perayaan ilmu pengetahuan yang damai, susunan buku tebal dan alat tulis modern diletakkan secara estetik di dekat sesajen tradisional Bali, cahaya warna-warni lembut, ${promptSuffixSquare}`
+                    basePrompt: `buku tebal dan alat tulis modern diletakkan estetik di dekat ornamen tradisional, perayaan ilmu pengetahuan`
                 },
                 "Hari Raya Galungan": {
                     topic: "Kreativitas Menyambut Galungan",
                     format: "Greeting Post / Reels",
-                    description: "Rahajeng Galungan. Buat video tutorial membuat hiasan dari kertas warna dan alat lukis ATK.",
+                    description: "Rahajeng Galungan. Buat tutorial membuat hiasan dari kertas warna dan alat lukis ATK.",
                     hashtags: "#Galungan #BalineseCulture",
-                    imagePrompt: `Poster perayaan kreatif, perpaduan kertas lipat cerah, gunting, dan spidol warna yang disusun estetik, suasana gembira, getaran hari raya yang meriah, ${promptSuffix}`
+                    basePrompt: `perpaduan kertas lipat, gunting, dan spidol disusun estetik melambangkan kreativitas hari raya yang meriah`
                 }
             };
 
             const defaultIdea = {
                 topic: `Momen Spesial: ${event.name}`,
                 format: "Photo Post / Story",
-                description: `Manfaatkan momen ${event.name} ini. Tampilkan produk ATK yang relevan dengan tema hari ini atau berikan ucapan spesial kepada audiens Anda.`,
+                description: `Manfaatkan momen ${event.name} ini. Tampilkan produk ATK yang relevan dengan tema hari ini.`,
                 hashtags: "#Stationery #AlatTulisKantor",
-                imagePrompt: `Desain poster estetik yang menarik perhatian, susunan berbagai produk alat tulis modern seperti buku catatan dan pulpen berwarna, pencahayaan kreatif, ${promptSuffixSquare}`
+                basePrompt: `susunan berbagai produk alat tulis modern seperti buku catatan dan pulpen, penataan kreatif untuk promosi`
             };
 
             return ideas[event.name] || defaultIdea;
@@ -333,15 +339,15 @@
 
         function changeMonth(offset) {
             currentDate.setMonth(currentDate.getMonth() + offset);
-            selectedDate = null; // Reset seleksi saat pindah bulan
+            selectedDate = null; 
             renderCalendar();
             renderDetails();
             lucide.createIcons();
         }
 
         function goToToday() {
-            currentDate = new Date(); // Dapatkan waktu sekarang
-            selectedDate = currentDate.getDate(); // Pilih hari ini
+            currentDate = new Date(); 
+            selectedDate = currentDate.getDate(); 
             renderCalendar();
             renderDetails();
             lucide.createIcons();
@@ -366,14 +372,12 @@
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
 
-            // Kotak kosong di awal bulan
             for (let i = 0; i < firstDay; i++) {
                 const emptyDiv = document.createElement('div');
                 emptyDiv.className = 'p-2 min-h-[90px] bg-pop-bg/50 rounded-2xl opacity-40 border border-dashed border-gray-200';
                 grid.appendChild(emptyDiv);
             }
 
-            // Loop setiap hari dalam bulan
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayDate = new Date(year, month, day);
                 const dayOfWeek = dayDate.getDay();
@@ -382,7 +386,6 @@
                 const isSelected = selectedDate === day;
                 const isToday = day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
 
-                // Base style untuk kotak tanggal
                 let styleClasses = "p-2 md:p-3 min-h-[90px] md:min-h-[110px] rounded-2xl relative cursor-pointer transition-all duration-300 flex flex-col items-start group ";
                 
                 if (isSelected) {
@@ -397,11 +400,9 @@
                 dayDiv.className = styleClasses;
                 dayDiv.onclick = () => selectDate(day);
 
-                // Warna Angka Tanggal
                 let numberColor = isSelected ? 'text-white' : (dayOfWeek === 0 ? 'text-pop-pink' : 'text-pop-dark');
                 let htmlContent = `<span class="text-sm md:text-base font-extrabold ${numberColor}">${day}</span>`;
 
-                // Badge Event
                 if (eventsToday.length > 0) {
                     htmlContent += `<div class="mt-1.5 flex flex-col gap-1 w-full">`;
                     eventsToday.forEach(event => {
@@ -424,7 +425,6 @@
                     htmlContent += `</div>`;
                 }
 
-                // Short View Ide Konten
                 let shortIdeaText = eventsToday.length > 0 ? generateContentIdea(eventsToday[0]).topic : dailyIdeas[dayOfWeek].topic;
                 let ideaLabelColor = isSelected ? 'text-white/70' : 'text-pop-purple/70';
                 let ideaTextColor = isSelected ? 'text-white' : 'text-pop-dark/80';
@@ -483,11 +483,36 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Modul Pengaturan Model Poster AI -->
+                <div class="mb-5 bg-pop-purple/5 p-4 rounded-2xl border border-pop-purple/20 flex flex-col gap-3">
+                    <div class="flex items-center gap-2 text-sm font-bold text-pop-purple">
+                        <i data-lucide="settings-2" class="w-4 h-4"></i> Opsi Model Poster (AI Generator)
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <div class="flex-1">
+                            <label class="text-[11px] font-bold text-pop-dark/60 mb-1.5 block uppercase tracking-wider">Ukuran Poster:</label>
+                            <select id="arSelect" onchange="updatePromptSettings()" class="w-full text-sm bg-white border border-gray-200 text-pop-dark font-medium rounded-xl px-3 py-2 outline-none focus:border-pop-purple shadow-sm transition-all cursor-pointer">
+                                <option value="4:5" ${currentAR === '4:5' ? 'selected' : ''}>Portrait (4:5) - IG Feed</option>
+                                <option value="1:1" ${currentAR === '1:1' ? 'selected' : ''}>Persegi (1:1) - Marketplace</option>
+                                <option value="9:16" ${currentAR === '9:16' ? 'selected' : ''}>Story/Reels (9:16)</option>
+                                <option value="16:9" ${currentAR === '16:9' ? 'selected' : ''}>Landscape (16:9) - Banner</option>
+                            </select>
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-[11px] font-bold text-pop-dark/60 mb-1.5 block uppercase tracking-wider">Gaya Visual:</label>
+                            <select id="styleSelect" onchange="updatePromptSettings()" class="w-full text-sm bg-white border border-gray-200 text-pop-dark font-medium rounded-xl px-3 py-2 outline-none focus:border-pop-purple shadow-sm transition-all cursor-pointer">
+                                <option value="fotografi produk estetik dan profesional" ${currentStyle.includes('fotografi') ? 'selected' : ''}>Fotografi Estetik</option>
+                                <option value="3D render bergaya kartun modern yang ceria" ${currentStyle.includes('3D') ? 'selected' : ''}>3D Render Ceria</option>
+                                <option value="ilustrasi flat design minimalis" ${currentStyle.includes('ilustrasi') ? 'selected' : ''}>Ilustrasi Minimalis</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="flex-1 overflow-y-auto pr-2 space-y-5 custom-scroll">
             `;
 
-            // Render Event Spesial (Jika ada)
             if (eventsToday.length > 0) {
                 eventsToday.forEach(event => {
                     const idea = generateContentIdea(event);
@@ -500,7 +525,6 @@
                     htmlContent += buildContentCard(idea, `Spesial: ${event.name}`, badgeStyles, icon, true);
                 });
                 
-                // Tambahkan pembatas estetik sebelum ide rutin
                 htmlContent += `
                     <div class="flex items-center gap-3 py-2">
                         <div class="h-px bg-gray-200 flex-1"></div>
@@ -510,7 +534,6 @@
                 `;
             }
 
-            // Render Ide Rutin Harian
             htmlContent += buildContentCard(routineIdea, "Ide Rutin Harian", "bg-pop-bg text-pop-purple border border-pop-purple/20", "clock", false);
 
             htmlContent += `</div>`;
@@ -520,7 +543,11 @@
         function buildContentCard(data, label, badgeClass, icon, isEvent) {
             const promptId = `prompt-${Math.random().toString(36).substr(2, 9)}`;
             
-            // Border dan Highlight dinamis berdasarkan tipe kartu
+            // Konfigurasi Final Prompt Dinamis
+            const colorPalette = "wajib menggunakan secara ketat hanya palet warna ini: Cyan Blue (#00ACDF), Pale Cyan (#D4F6FF), Royal Blue (#2696E4), Yellow (#FFEA86), dan Pale Yellow (#FFF8DB)";
+            const copySpace = "sediakan area kosong (copy space) yang polos di salah satu sisi untuk tempat menaruh teks promosi";
+            const finalPromptText = `Desain poster alat tulis, ${data.basePrompt}. Gaya visual: ${currentStyle}. ${copySpace}. ${colorPalette}. Sangat detail, pencahayaan memukau, resolusi 8k --ar ${currentAR}`;
+
             const cardBg = isEvent ? 'bg-white' : 'bg-gray-50';
             const cardBorder = isEvent ? 'border-pop-pink/30 shadow-md shadow-pop-pink/5' : 'border-gray-200';
             const highlightColor = isEvent ? 'bg-gradient-to-b from-pop-pink to-pop-orange' : 'bg-pop-teal';
@@ -551,21 +578,20 @@
                     <div class="bg-pop-dark rounded-2xl overflow-hidden shadow-lg mt-2 group/prompt">
                         <div class="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700">
                             <span class="text-xs font-bold text-pop-pink flex items-center gap-2">
-                                <i data-lucide="sparkles" class="w-4 h-4"></i> AI Image Prompt
+                                <i data-lucide="sparkles" class="w-4 h-4"></i> AI Image Prompt (Auto-Generated)
                             </span>
-                            <button onclick="copyToClipboard('${data.imagePrompt.replace(/'/g, "\\'")}', this)" class="text-gray-400 hover:text-white bg-gray-700 hover:bg-pop-purple px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold transition-all rounded-lg shadow-sm">
+                            <button onclick="copyToClipboard('${finalPromptText.replace(/'/g, "\\'")}', this)" class="text-gray-400 hover:text-white bg-gray-700 hover:bg-pop-purple px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold transition-all rounded-lg shadow-sm">
                                 <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span class="btn-text">Copy</span>
                             </button>
                         </div>
                         <div class="p-4 relative">
-                            <p class="text-sm text-gray-300 font-mono leading-relaxed" id="${promptId}">${data.imagePrompt}</p>
+                            <p class="text-sm text-gray-300 font-mono leading-relaxed" id="${promptId}">${finalPromptText}</p>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        // Fungsi Copy to Clipboard yang aman untuk iframe
         async function copyToClipboard(text, btnElement) {
             const btnText = btnElement.querySelector('.btn-text');
             
