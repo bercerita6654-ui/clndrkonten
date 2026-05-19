@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalender Konten Alat Tulis</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cyan-blue': '#00ACDF',
+                        'pale-cyan': '#D4F6FF',
+                        'royal-blue': '#2696E4',
+                        'main-yellow': '#FFEA86',
+                        'pale-yellow': '#FFF8DB',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #FFF8DB;
+            color: #2696E4;
+        }
+        /* Kustomisasi Scrollbar dengan Palet Warna */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF8DB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00ACDF;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2696E4;
+        }
+        
+        .glass-panel {
+            background: rgba(212, 246, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 172, 223, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans overflow-x-hidden">
+
+    <header class="bg-gradient-to-r from-royal-blue to-cyan-blue text-pale-yellow shadow-md py-6 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <i data-lucide="calendar-days" class="w-8 h-8 text-main-yellow"></i>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-pale-yellow">Content Planner</h1>
+                    <p class="text-sm text-pale-cyan opacity-90">Inspirasi Bisnis Alat Tulis & Sekolah</p>
+                </div>
+            </div>
+            <button onclick="goToToday()" class="bg-main-yellow text-royal-blue hover:bg-pale-yellow px-4 py-2 rounded-full font-semibold text-sm transition-all shadow-sm flex items-center gap-2">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> Hari Ini
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8 flex flex-col lg:flex-row gap-8">
+        
+        <!-- Kolom Kiri: Kalender -->
+        <section class="flex-1">
+            <div class="glass-panel rounded-2xl p-4 md:p-6 shadow-sm">
+                
+                <!-- Navigasi Bulan -->
+                <div class="flex justify-between items-center mb-6">
+                    <button onclick="changeMonth(-1)" class="p-2 rounded-full bg-pale-yellow text-royal-blue hover:bg-main-yellow transition-colors">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    <h2 id="monthYearDisplay" class="text-xl md:text-2xl font-bold text-royal-blue text-center">Bulan Tahun</h2>
+                    <button onclick="changeMonth(1)" class="p-2 rounded-full bg-pale-yellow text-royal-blue hover:bg-main-yellow transition-colors">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Grid Kalender Header Hari -->
+                <div class="grid grid-cols-7 gap-2 md:gap-4 mb-2 text-center font-bold text-cyan-blue text-xs md:text-sm">
+                    <div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+                </div>
+
+                <!-- Grid Kalender Tanggal -->
+                <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-2">
+                    <!-- Tanggal akan di-render menggunakan JavaScript -->
+                </div>
+
+                <!-- Legenda / Filter -->
+                <div class="mt-8 pt-6 border-t border-cyan-blue/20">
+                    <h3 class="text-sm font-semibold text-royal-blue mb-4">Keterangan & Daftar Event (Klik untuk melihat):</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="openModal('holiday')" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-pale-yellow border border-royal-blue text-royal-blue hover:bg-main-yellow transition-colors text-xs md:text-sm shadow-sm group">
+                            <span class="w-3 h-3 rounded-full bg-royal-blue group-hover:animate-ping"></span> Libur Nasional
+                        </button>
+                        <button onclick="openModal('school')" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-pale-yellow border border-cyan-blue text-cyan-blue hover:bg-main-yellow hover:text-royal-blue transition-colors text-xs md:text-sm shadow-sm group">
+                            <span class="w-3 h-3 rounded-full bg-cyan-blue group-hover:animate-ping"></span> Momen Sekolah
+                        </button>
+                        <button onclick="openModal('promo')" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-pale-yellow border border-main-yellow text-royal-blue hover:bg-main-yellow transition-colors text-xs md:text-sm shadow-sm group">
+                            <span class="w-3 h-3 rounded-full bg-main-yellow group-hover:animate-ping"></span> Promo Kembar
+                        </button>
+                        <button onclick="openModal('regional')" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-pale-yellow border-2 border-royal-blue text-royal-blue hover:bg-main-yellow transition-colors text-xs md:text-sm shadow-sm group">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-royal-blue group-hover:animate-bounce"></i> Lokal (Bali)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full lg:w-[400px] xl:w-[450px]">
+            <div id="detailsPanel" class="glass-panel rounded-2xl p-6 shadow-sm sticky top-6 min-h-[400px] flex flex-col">
+                <!-- Konten Detail akan di-render menggunakan JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <div id="eventModal" class="fixed inset-0 bg-royal-blue/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-pale-yellow rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modalContentBox">
+            <div class="bg-gradient-to-r from-royal-blue to-cyan-blue p-4 flex justify-between items-center text-pale-yellow">
+                <h3 id="modalTitle" class="font-bold text-lg flex items-center gap-2">Daftar Event</h3>
+                <button onclick="closeModal()" class="text-pale-yellow hover:text-main-yellow transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="p-4 max-h-[60vh] overflow-y-auto" id="modalBody">
+                <!-- List Event di-render via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Libur Nasional (Estimasi SKB 2026)
+        const holidayData = [
+            { month: 0, date: 1, name: "Tahun Baru 2026 Masehi", type: "holiday" },
+            { month: 1, date: 17, name: "Isra Mikraj Nabi Muhammad SAW", type: "holiday" },
+            { month: 1, date: 17, name: "Tahun Baru Imlek 2577 Kongzili", type: "holiday" },
+            { month: 2, date: 19, name: "Hari Suci Nyepi (Tahun Baru Saka 1948)", type: "holiday" },
+            { month: 2, date: 20, name: "Cuti Bersama Hari Suci Nyepi", type: "holiday" },
+            { month: 2, date: 21, name: "Idul Fitri 1447 H", type: "holiday" },
+            { month: 2, date: 22, name: "Idul Fitri 1447 H", type: "holiday" },
+            { month: 3, date: 3, name: "Wafat Yesus Kristus", type: "holiday" },
+            { month: 3, date: 5, name: "Hari Paskah", type: "holiday" },
+            { month: 4, date: 1, name: "Hari Buruh Internasional", type: "holiday" },
+            { month: 4, date: 14, name: "Kenaikan Yesus Kristus", type: "holiday" },
+            { month: 4, date: 27, name: "Idul Adha 1447 H", type: "holiday" },
+            { month: 4, date: 31, name: "Hari Raya Waisak 2570 BE", type: "holiday" },
+            { month: 5, date: 1, name: "Hari Lahir Pancasila", type: "holiday" },
+            { month: 6, date: 16, name: "Tahun Baru Islam 1448 H", type: "holiday" },
+            { month: 7, date: 17, name: "Proklamasi Kemerdekaan RI", type: "holiday" },
+            { month: 8, date: 27, name: "Maulid Nabi Muhammad SAW", type: "holiday" },
+            { month: 11, date: 25, name: "Hari Raya Natal", type: "holiday" }
+        ];
+
+        // Data Momen Sekolah
+        const schoolMoments = [
+            { month: 0, date: 5, name: "Awal Semester Genap", type: "school" },
+            { month: 4, date: 2, name: "Hari Pendidikan Nasional", type: "school" },
+            { month: 6, date: 13, name: "Tahun Ajaran Baru / Back to School", type: "school" },
+            { month: 10, date: 25, name: "Hari Guru Nasional", type: "school" }
+        ];
+
+        // Data Promo Tanggal Kembar
+        const promoData = [];
+        for (let i = 0; i < 12; i++) {
+            promoData.push({ month: i, date: i + 1, name: `Promo Puncak ${i + 1}.${i + 1}`, type: "promo" });
+        }
+
+        // Data Hari Raya Lokal (Bali - 2026)
+        const regionalMoments = [
+            { month: 3, date: 4, name: "Hari Raya Saraswati", type: "regional" },
+            { month: 3, date: 8, name: "Hari Raya Pagerwesi", type: "regional" },
+            { month: 5, date: 17, name: "Hari Raya Galungan", type: "regional" },
+            { month: 5, date: 27, name: "Hari Raya Kuningan", type: "regional" },
+            { month: 9, date: 31, name: "Hari Raya Saraswati", type: "regional" },
+            { month: 10, date: 4, name: "Hari Raya Pagerwesi", type: "regional" }
+        ];
+
+        const allEvents = [...holidayData, ...schoolMoments, ...promoData, ...regionalMoments];
+
+        // Data Rutin Harian (Senin-Minggu)
+        const dailyIdeas = [
+            { dayName: "Minggu", topic: "Relax, Journaling & Prep", format: "Aesthetic Video / Photo", description: "Konten santai. Tunjukkan ide journaling untuk self-care (me-time), atau ingatkan followers untuk mempersiapkan tas, binder, dan alat tulis untuk sekolah/kerja besok.", hashtags: "#SundayVibes #JournalingIdeas #PersiapanSekolah #BulletJournal", imagePrompt: `A cozy Sunday morning aesthetic, a beautiful open bullet journal with creative doodles, soft cozy blankets, highly aesthetic Pinterest style photography, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5` },
+            { dayName: "Senin", topic: "Monday Motivation & Planning", format: "Carousel / Single Image", description: "Awali minggu dengan produktif! Bagikan quote motivasi kerja/belajar yang ditulis tangan (lettering). Tampilkan dan promosikan buku agenda, planner, atau sticky notes.", hashtags: "#MondayMotivation #PlannerAddict #AgendaKerja #SemangatSenin", imagePrompt: `A clean, bright, and inspiring workspace, an open weekly planner filled with neat tasks, sticky notes on a sleek laptop screen, a sleek pen, motivational and productive atmosphere, bright lighting, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1` },
+            { dayName: "Selasa", topic: "Tips & Trik Edukatif", format: "Reels / Infografis", description: "Bagikan tips seputar alat tulis yang bermanfaat. Contoh: 'Cara menghilangkan noda tinta', 'Perbedaan pulpen gel vs ballpoint', atau 'Tips mencatat estetik (studygram)'.", hashtags: "#TipsATK #StudygramIndonesia #AlatTulis #Edukasi", imagePrompt: `A macro photography close up showing the difference between a gel pen tip and a ballpoint pen tip drawing lines on premium textured paper, informative and detailed, clean background, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5` },
+            { dayName: "Rabu", topic: "Product Spotlight / Review", format: "Video Pendek / Photo Post", description: "Fokus pada satu produk unggulan atau produk baru. Tunjukkan detailnya (swatches warna spidol, ketebalan/kualitas kertas buku catatan). Buat review jujur atau repost testimoni pelanggan.", hashtags: "#ReviewAlatTulis #RekomendasiATK #StationeryHaul", imagePrompt: `A satisfying swatch sheet of vibrant brush markers on thick white paper, the markers are laid neatly beside the swatches, bright studio lighting, professional product spotlight photography, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1` },
+            { dayName: "Kamis", topic: "Interaksi & Engagement", format: "Instagram Story / Polling", description: "Ajak followers berinteraksi agar akun lebih aktif. Buat game 'This or That' (Pulpen Biru vs Hitam, Buku Garis vs Polos). Atau buat tebak-tebakan seputar perlengkapan sekolah/kantor.", hashtags: "#StationeryAddict #Interaksi #QnATime #BukuTulis", imagePrompt: `A split-screen composition showing an elegant pen on the left and another contrasting pen on the right, high quality product photography, 'this or that' aesthetic, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1` },
+            { dayName: "Jumat", topic: "Promo & Bundling Akhir Pekan", format: "Poster Promo / Flash Sale", description: "Sambut akhir pekan dengan penawaran khusus untuk mendorong penjualan. Promosikan 'Paket Hemat Sekolah', diskon ongkir akhir pekan, atau promo spesial Jumat Berkah.", hashtags: "#PromoATK #DiskonStationery #FlashSale #PaketHemat", imagePrompt: `A beautifully curated bundle of matching stationery sets tied together with a rustic ribbon, soft aesthetic lighting, inviting and appealing promotional image, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5` },
+            { dayName: "Sabtu", topic: "Behind the Scenes (BTS) & Hiburan", format: "Reels / TikTok (ASMR)", description: "Tunjukkan sisi humanis bisnis Anda. Buat video ASMR packing orderan pelanggan, merapikan stok barang di rak toko, atau sekadar membagikan suasana toko yang estetik di akhir pekan.", hashtags: "#SmallBusinessIndonesia #PackingOrders #ASMRStationery #TokoBuku", imagePrompt: `A cozy behind-the-scenes look of a person carefully wrapping stationery products in eco-friendly honeycomb paper on a large crafting table, warm inviting lights, small business aesthetic, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1` }
+        ];
+
+        const MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        const generateEventIdea = (event) => {
+            if (event.type === 'promo') {
+                return {
+                    topic: `Campaign Mega Sale ${event.name}`,
+                    format: "Poster Promo / Live Shopping / Reels",
+                    description: `Waktunya dorong penjualan! Siapkan 'Paket Bundling ATK', Flash Sale buku & pulpen, dan ingatkan followers untuk klaim voucher Gratis Ongkir di Shopee/Tokopedia/TikTok. Lakukan Live Shopping untuk konversi maksimal.`,
+                    hashtags: `#PromoATK #DiskonAlatTulis #ShopeeID #Tokopedia #Promo${event.date}${event.month+1}`,
+                    imagePrompt: `A vibrant e-commerce promotional 3D banner for stationery products, featuring floating notebooks, pens, and glowing neon text "MEGA SALE", 3d render style, highly detailed, high quality, appealing lighting, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                };
+            }
+
+            const customIdeas = {
+                "Tahun Baru 2026 Masehi": {
+                    topic: "Resolusi & Perencanaan Baru",
+                    format: "Reels / Carousel",
+                    description: "Tunjukkan koleksi planner, buku catatan, dan pulpen premium untuk memulai tahun dengan rapi. Ajakan: 'Apa resolusi menulismu tahun ini?'",
+                    hashtags: "#TahunBaru #Resolusi2026 #PlannerAddict #ATK",
+                    imagePrompt: `A beautiful flat lay of a blank modern 2026 planner on a warm desk, surrounded by premium pens, soft morning sunlight illuminating the desk, aesthetic photography, highly detailed, 8k, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5`
+                },
+                "Tahun Baru Imlek 2577 Kongzili": {
+                    topic: "Nuansa Merah & Keberuntungan",
+                    format: "Photo Post",
+                    description: "Kurasi produk ATK berwarna merah atau emas (angpao, spidol merah, notes). Promo 'Hoki Imlek' diskon 8%.",
+                    hashtags: "#Imlek #GongXiFaCai #ATKHoki #PromoImlek",
+                    imagePrompt: `A festive arrangement of luxury stationery items, envelopes, elegant notebooks, subtle Chinese New Year decorations in the background, elegant lighting, product photography, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Hari Suci Nyepi (Tahun Baru Saka 1948)": {
+                    topic: "Ketenangan & Menulis Reflektif",
+                    format: "Quote Graphic",
+                    description: "Quote tentang ketenangan dan pentingnya menulis jurnal (journaling) saat hening. Promosikan buku jurnal blank/dotted.",
+                    hashtags: "#Nyepi #Journaling #Mindfulness #BukuCatatan",
+                    imagePrompt: `A minimalist, serene workspace, a single high-quality blank journal and a sleek pen on a neat desk, dim moody lighting, feeling of silence and mindfulness, calm atmosphere, professional photography, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5`
+                },
+                "Idul Fitri 1447 H": {
+                    topic: "Kartu Ucapan & Hampers Lebaran",
+                    format: "Video Tutorial / Carousel",
+                    description: "Tutorial membuat kartu ucapan lebaran DIY menggunakan produk lettering/spidol kaligrafi toko. Tawarkan 'Hampers ATK Estetik' untuk hadiah anak/keponakan.",
+                    hashtags: "#IdulFitri #Lebaran #HampersLebaran #LetteringIndonesia #KartuUcapan",
+                    imagePrompt: `A beautifully crafted handmade Eid greeting card written with elegant calligraphy pens, surrounded by art supplies, markers, and a nicely wrapped gift box, warm and joyful lighting, aesthetic flat lay, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Idul Adha 1447 H": {
+                    topic: "Semangat Berkurban & Berbagi",
+                    format: "Quote / Carousel",
+                    description: "Ucapan selamat Idul Adha. Sisipkan ide berbagi dengan mendonasikan alat tulis ke panti asuhan atau mengadakan diskon khusus 'Berkah Idul Adha'.",
+                    hashtags: "#IdulAdha #Qurban #BerbagiKebaikan #PromoIdulAdha #AlatTulis",
+                    imagePrompt: `A heartfelt composition of beautifully wrapped stationery gift boxes ready to be donated, surrounded by soft ribbons, subtle Islamic geometric patterns in the background, warm and generous atmosphere, soft lighting, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5`
+                },
+                "Proklamasi Kemerdekaan RI": {
+                    topic: "Semangat Merah Putih & Lomba",
+                    format: "Giveaway / Reel",
+                    description: "Giveaway produk ATK bernuansa merah putih. Tunjukkan alat lukis/gambar untuk persiapan lomba 17-an di sekolah.",
+                    hashtags: "#HUTRI #17Agustus #LombaGambar #ATKMerahPutih",
+                    imagePrompt: `A dynamic and creative layout of art supplies, colored pencils, and paints, arranged dynamically on a clean background, national pride aesthetic, bright studio lighting, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Hari Raya Natal": {
+                    topic: "Kado Edukatif & Wrapping",
+                    format: "Carousel / Reel",
+                    description: "Ide kado natal berupa set alat lukis, buku diary untuk anak. Tunjukkan tutorial membungkus kado menggunakan kertas kado & pita koleksi toko.",
+                    hashtags: "#Natal #KadoNatal #ChristmasGift #StationeryGift #ArtSupplies",
+                    imagePrompt: `A cozy Christmas scene, beautiful stationery sets and art supplies elegantly wrapped as Christmas gifts, festive ribbons, subtle bokeh lights in the background, warm holiday atmosphere, professional product photography, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Awal Semester Genap": {
+                    topic: "Restock Kebutuhan Sekolah",
+                    format: "Checklist Graphic",
+                    description: "Checklist barang yang sering habis di tengah tahun (isi binder, pulpen tinta, tip-ex). Promo bundle hemat semester genap.",
+                    hashtags: "#SemesterGenap #BackToSchool #PromoPelajar",
+                    imagePrompt: `A neat and organized flat lay of essential school supplies, loose leaf papers, highlighters, correction tape, and pens, back to school aesthetic, bright and clean, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5`
+                },
+                "Hari Pendidikan Nasional": {
+                    topic: "Pentingnya Menulis & Membaca",
+                    format: "Carousel Edukatif",
+                    description: "Fakta menarik tentang manfaat menulis tangan vs mengetik. Diskon khusus untuk buku catatan dan alat tulis basic untuk pelajar.",
+                    hashtags: "#Hardiknas #HariPendidikanNasional #AyoMenulis",
+                    imagePrompt: `A close up of a person's hand writing in a beautiful notebook with a premium pen, an open textbook nearby, library or study room setting in the background, focus on the pen and paper, inspiring educational mood, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Tahun Ajaran Baru / Back to School": {
+                    topic: "Persiapan Back to School Besar-besaran",
+                    format: "Live Shopping / Video Tour",
+                    description: "Momen puncak! Video unboxing tas sekolah, tempat pensil, dan bundle alat tulis lengkap per jenjang (SD/SMP/SMA). Kampanye 'Siap Sekolah'.",
+                    hashtags: "#BackToSchool #TahunAjaranBaru #PromoSekolah",
+                    imagePrompt: `An exciting 3D composition of a trendy school backpack bursting open with colorful stationery, notebooks, markers, rulers flying out playfully, energetic and vibrant back to school theme, 8k render, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Hari Guru Nasional": {
+                    topic: "Apresiasi Pahlawan Tanpa Tanda Jasa",
+                    format: "Gift Guide",
+                    description: "Ide hadiah elegan untuk guru: Pulpen eksklusif, agenda kulit, atau mug custom + set alat tulis. Diskon khusus jika menunjukkan kartu identitas guru.",
+                    hashtags: "#HariGuruNasional #KadoUntukGuru #TerimaKasihGuru",
+                    imagePrompt: `A luxurious and elegant corporate gift box containing a premium fountain pen and a fine leather-bound agenda, resting on a clean desk, dramatic and classy lighting, professional and respectful tone, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5`
+                },
+                "Hari Raya Saraswati": {
+                    topic: "Hari Turunnya Ilmu Pengetahuan",
+                    format: "Quote Graphic / Promo",
+                    description: "Rahajeng Rahina Saraswati! Karena ini adalah hari perayaan ilmu pengetahuan, tawarkan diskon khusus untuk pelajar (buku tulis, alat lukis, dan kaligrafi).",
+                    hashtags: "#Saraswati #HariRayaSaraswati #IlmuPengetahuan",
+                    imagePrompt: `A beautiful and serene arrangement of thick books and modern stationery placed next to a traditional Balinese lontar and a delicate offering, soft glowing light, celebration of knowledge, respectful and aesthetic photography, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Hari Raya Galungan": {
+                    topic: "Kemenangan Kebaikan & Kreativitas",
+                    format: "Greeting Post / Reels",
+                    description: "Rahajeng Galungan. Buat video tutorial membuat hiasan penjor/canang mini dari kertas warna dan alat lukis ATK. Tampilkan semangat kemenangan Dharma (kebaikan).",
+                    hashtags: "#Galungan #RahajengGalungan #BalineseCulture",
+                    imagePrompt: `A creative flatlay combining art papers, scissors, and markers, arranged in a way that subtly resembles a Balinese Penjor, joyful and vibrant atmosphere, festive Balinese holiday vibe, high resolution, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5`
+                },
+                "Hari Raya Kuningan": {
+                    topic: "Syukur & Kesuksesan",
+                    format: "Photo Post",
+                    description: "Ucapan Rahajeng Kuningan. Tampilkan produk unggulan toko berwarna kuning atau emas (stabilo, notes, pulpen premium) yang identik dengan warna khas Kuningan.",
+                    hashtags: "#Kuningan #RahajengKuningan #StationeryBali",
+                    imagePrompt: `A stunning collection of stationery products, beautifully arranged on a bright background, prosperous and joyful aesthetic, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+                },
+                "Hari Raya Pagerwesi": {
+                    topic: "Membentengi Ilmu & Catatan",
+                    format: "Carousel Edukatif",
+                    description: "Ucapan Pagerwesi. Filosofikan dengan pentingnya menjaga 'ilmu' lewat catatan yang baik. Promosikan binder, map, dan organizer.",
+                    hashtags: "#Pagerwesi #Organizer #DocumentKeeper",
+                    imagePrompt: `A highly organized and aesthetic office desk setting featuring premium leather binders, neatly labeled document folders, and a sleek pen, symbolizing protection and organization of knowledge, clean and professional lighting, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 4:5`
+                }
+            };
+
+            return customIdeas[event.name] || {
+                topic: `Momen ${event.name}`,
+                format: "Photo Post / Story",
+                description: `Manfaatkan momen ${event.name} untuk menyapa pelanggan. Tampilkan produk ATK yang relevan dengan tema hari ini atau sekadar ucapan selamat.`,
+                hashtags: "#Stationery #ATK #AlatTulisKantor",
+                imagePrompt: `A beautiful and aesthetic arrangement of various stationery products, modern notebooks and pens, creative lighting, high quality product photography, strictly using only this color palette: Cyan Blue, Pale Cyan, Royal Blue, Yellow, and Pale Yellow --ar 1:1`
+            };
+        };
+
+        let currentDate = new Date();
+        let selectedDate = currentDate.getDate();
+
+        function initCalendar() {
+            renderCalendar();
+            renderDetails();
+            lucide.createIcons();
+        }
+
+        function changeMonth(offset) {
+            currentDate.setMonth(currentDate.getMonth() + offset);
+            selectedDate = null; // Reset seleksi saat pindah bulan
+            renderCalendar();
+            renderDetails();
+            lucide.createIcons();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            selectedDate = currentDate.getDate();
+            renderCalendar();
+            renderDetails();
+            lucide.createIcons();
+        }
+
+        function selectDate(day) {
+            selectedDate = day;
+            renderCalendar(); // Re-render untuk memindahkan highlight
+            renderDetails();
+            lucide.createIcons();
+        }
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            document.getElementById('monthYearDisplay').innerText = `${MONTHS[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Kotak kosong di awal bulan
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'p-2 min-h-[80px] bg-pale-cyan/30 rounded-lg opacity-50';
+                grid.appendChild(emptyDiv);
+            }
+
+            // Loop setiap hari dalam bulan
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDate = new Date(year, month, day);
+                const dayOfWeek = dayDate.getDay();
+                
+                // Cari event di hari ini
+                const eventsToday = allEvents.filter(e => e.month === month && e.date === day);
+                const isSelected = selectedDate === day;
+                const isToday = day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+
+                let styleClasses = "p-2 min-h-[80px] md:min-h-[100px] border border-cyan-blue/20 rounded-lg relative cursor-pointer transition-all duration-200 flex flex-col items-start hover:shadow-md ";
+                
+                if (isSelected) {
+                    styleClasses += "bg-main-yellow ring-2 ring-royal-blue shadow-lg transform scale-105 z-10 ";
+                } else if (isToday) {
+                    styleClasses += "bg-pale-cyan border-2 border-royal-blue ";
+                } else {
+                    styleClasses += "bg-pale-yellow hover:bg-pale-cyan ";
+                }
+
+                // Bangun HTML Kotak Hari
+                const dayDiv = document.createElement('div');
+                dayDiv.className = styleClasses;
+                dayDiv.onclick = () => selectDate(day);
+
+                // Angka Tanggal
+                let numberColor = (dayOfWeek === 0) ? 'text-cyan-blue' : 'text-royal-blue';
+                if (isSelected) numberColor = 'text-royal-blue';
+
+                let htmlContent = `<span class="text-sm md:text-base font-bold ${numberColor}">${day}</span>`;
+
+                // Badge Event
+                if (eventsToday.length > 0) {
+                    htmlContent += `<div class="mt-1 flex flex-col gap-1 w-full">`;
+                    eventsToday.forEach(event => {
+                        let badgeClass = "";
+                        let iconHtml = "";
+                        if (event.type === 'holiday') {
+                            badgeClass = "bg-royal-blue text-pale-yellow";
+                        } else if (event.type === 'school') {
+                            badgeClass = "bg-cyan-blue text-pale-yellow";
+                        } else if (event.type === 'promo') {
+                            badgeClass = "bg-main-yellow text-royal-blue font-bold border border-royal-blue/30";
+                            iconHtml = `<i data-lucide="shopping-bag" class="w-3 h-3 inline mr-1"></i>`;
+                        } else if (event.type === 'regional') {
+                            badgeClass = "bg-pale-cyan text-royal-blue border border-royal-blue";
+                            iconHtml = `<i data-lucide="map-pin" class="w-3 h-3 inline mr-1"></i>`;
+                        }
+                        
+                        htmlContent += `<div class="${badgeClass} text-[9px] md:text-[10px] leading-tight px-1.5 py-0.5 rounded truncate w-full shadow-sm" title="${event.name}">${iconHtml}${event.name}</div>`;
+                    });
+                    htmlContent += `</div>`;
+                }
+
+                // Short View Ide Konten (jika muat)
+                let shortIdeaText = "";
+                if (eventsToday.length > 0) {
+                    shortIdeaText = generateEventIdea(eventsToday[0]).topic;
+                } else {
+                    shortIdeaText = dailyIdeas[dayOfWeek].topic;
+                }
+                
+                htmlContent += `
+                    <div class="mt-auto pt-2 w-full">
+                        <div class="text-[8px] md:text-[9px] text-cyan-blue font-semibold uppercase tracking-wider border-t border-cyan-blue/20 pt-1 truncate w-full">Ide:</div>
+                        <div class="text-[9px] md:text-[10px] text-royal-blue truncate w-full leading-tight opacity-90">${shortIdeaText}</div>
+                    </div>
+                `;
+
+                dayDiv.innerHTML = htmlContent;
+                grid.appendChild(dayDiv);
+            }
+        }
+
+        function renderDetails() {
+            const panel = document.getElementById('detailsPanel');
+            
+            if (!selectedDate) {
+                panel.innerHTML = `
+                    <div class="flex-1 flex flex-col items-center justify-center text-cyan-blue/50 h-full py-12">
+                        <i data-lucide="mouse-pointer-click" class="w-16 h-16 mb-4 text-cyan-blue/40"></i>
+                        <p class="text-lg font-medium text-center px-4">Klik salah satu tanggal di kalender<br>untuk melihat inspirasi konten.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const dayDate = new Date(year, month, selectedDate);
+            const dayOfWeek = dayDate.getDay();
+            const fullDateString = `${dailyIdeas[dayOfWeek].dayName}, ${selectedDate} ${MONTHS[month]} ${year}`;
+
+            const eventsToday = allEvents.filter(e => e.month === month && e.date === selectedDate);
+            const routineIdea = dailyIdeas[dayOfWeek];
+
+            let htmlContent = `
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-cyan-blue/30">
+                    <div class="bg-royal-blue text-pale-yellow p-3 rounded-xl shadow-md">
+                        <i data-lucide="calendar-heart" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-royal-blue leading-tight">${fullDateString}</h2>
+                        <p class="text-sm font-medium text-cyan-blue flex items-center gap-1 mt-1">
+                            <i data-lucide="info" class="w-4 h-4"></i>
+                            ${eventsToday.length > 0 ? `<span class="text-main-yellow bg-royal-blue px-2 py-0.5 rounded text-xs">Ada ${eventsToday.length} Event</span>` : 'Ide Konten Rutin'}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto pr-2 space-y-6">
+            `;
+
+            // Jika ada Event (Prioritas)
+            if (eventsToday.length > 0) {
+                eventsToday.forEach(event => {
+                    const idea = generateEventIdea(event);
+                    let badgeStyles = "bg-royal-blue text-pale-yellow";
+                    let icon = "star";
+                    if(event.type === 'school') { badgeStyles = "bg-cyan-blue text-pale-yellow"; icon = "graduation-cap"; }
+                    if(event.type === 'promo') { badgeStyles = "bg-main-yellow text-royal-blue border border-royal-blue/30"; icon = "shopping-bag"; }
+                    if(event.type === 'regional') { badgeStyles = "bg-pale-cyan text-royal-blue border border-royal-blue"; icon = "map-pin"; }
+
+                    htmlContent += buildContentCard(idea, `Spesial: ${event.name}`, badgeStyles, icon, true);
+                });
+            }
+
+            // Selalu tampilkan ide rutin sebagai alternatif
+            htmlContent += buildContentCard(routineIdea, "Alternatif: Ide Rutin Harian", "bg-pale-yellow text-royal-blue border border-cyan-blue", "clock", false);
+
+            htmlContent += `</div>`;
+            panel.innerHTML = htmlContent;
+        }
+
+        // Helper untuk membuat HTML Card Detail Konten
+        function buildContentCard(data, label, badgeClass, icon, isEvent) {
+            const promptId = `prompt-${Math.random().toString(36).substr(2, 9)}`;
+            return `
+                <div class="${isEvent ? 'bg-pale-yellow border-2 border-main-yellow' : 'bg-pale-cyan border border-cyan-blue/30'} rounded-xl p-5 shadow-sm relative overflow-hidden">
+                    ${isEvent ? '<div class="absolute top-0 left-0 w-1 h-full bg-main-yellow"></div>' : '<div class="absolute top-0 left-0 w-1 h-full bg-cyan-blue"></div>'}
+                    
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold mb-3 ${badgeClass}">
+                        <i data-lucide="${icon}" class="w-3.5 h-3.5"></i> ${label}
+                    </span>
+                    
+                    <h3 class="text-lg font-bold text-royal-blue mb-1">${data.topic}</h3>
+                    <p class="text-sm font-semibold text-cyan-blue mb-3 flex items-center gap-1.5">
+                        <i data-lucide="layout-template" class="w-4 h-4"></i> Format: ${data.format}
+                    </p>
+                    
+                    <div class="bg-white/50 p-3 rounded-lg border border-cyan-blue/10 mb-4">
+                        <p class="text-sm text-royal-blue leading-relaxed">${data.description}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-xs font-bold text-cyan-blue mb-1">Hashtags:</p>
+                        <p class="text-sm text-royal-blue bg-pale-cyan/50 px-2 py-1 rounded border border-cyan-blue/20 break-words">${data.hashtags}</p>
+                    </div>
+
+                    <div class="bg-cyan-blue rounded-lg overflow-hidden border border-royal-blue shadow-inner mt-4">
+                        <div class="bg-royal-blue px-3 py-2 flex justify-between items-center">
+                            <span class="text-xs font-bold text-main-yellow flex items-center gap-1.5">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI Image Generator Prompt
+                            </span>
+                            <button onclick="copyToClipboard('${data.imagePrompt.replace(/'/g, "\\'")}', this)" class="text-pale-yellow hover:text-main-yellow flex items-center gap-1 text-xs transition-colors p-1 rounded hover:bg-cyan-blue">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span class="btn-text">Copy</span>
+                            </button>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs text-pale-yellow italic opacity-90 mb-2">*(Gunakan prompt bahasa Inggris ini dengan palet warna khusus di Midjourney / Bing / ImageFX)*</p>
+                            <p class="text-sm text-white font-mono leading-relaxed" id="${promptId}">${data.imagePrompt}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function copyToClipboard(text, btnElement) {
+            const btnText = btnElement.querySelector('.btn-text');
+            const iconElement = btnElement.querySelector('i');
+            
+            const showSuccess = () => {
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-main-yellow"></i> <span class="text-main-yellow font-bold">Copied!</span>`;
+                lucide.createIcons();
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHtml;
+                    lucide.createIcons();
+                }, 2000);
+            };
+
+            try {
+                // Coba metode modern dulu
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    showSuccess();
+                    return;
+                }
+                throw new Error("Clipboard API not available");
+            } catch (err) {
+                // Fallback method (membuat textarea tersembunyi)
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+                textArea.style.position = "fixed";
+                textArea.style.opacity = "0";
+                
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showSuccess();
+                    } else {
+                        console.error('Fallback: Copy command unsuccessful');
+                        alert("Gagal menyalin. Silakan seleksi dan salin teks secara manual.");
+                    }
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                }
+
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function openModal(type) {
+            const modal = document.getElementById('eventModal');
+            const titleBox = document.getElementById('modalTitle');
+            const bodyBox = document.getElementById('modalBody');
+            
+            let filteredEvents = allEvents.filter(e => e.type === type);
+            let titleText = "";
+            let titleIcon = "";
+
+            if (type === 'holiday') { titleText = "Daftar Libur Nasional"; titleIcon = "calendar"; }
+            if (type === 'school') { titleText = "Momen Sekolah Penting"; titleIcon = "graduation-cap"; }
+            if (type === 'promo') { titleText = "Jadwal Promo Tanggal Kembar"; titleIcon = "shopping-bag"; }
+            if (type === 'regional') { titleText = "Hari Raya Lokal (Bali)"; titleIcon = "map-pin"; }
+
+            titleBox.innerHTML = `<i data-lucide="${titleIcon}" class="w-5 h-5 text-main-yellow"></i> ${titleText}`;
+
+            if (filteredEvents.length === 0) {
+                bodyBox.innerHTML = "<p class='text-center text-cyan-blue py-4'>Tidak ada data.</p>";
+            } else {
+                let listHtml = `<div class="space-y-2">`;
+                filteredEvents.forEach(e => {
+                    listHtml += `
+                        <div class="flex justify-between items-center p-3 bg-pale-cyan border border-cyan-blue/20 rounded-lg hover:border-cyan-blue transition-colors">
+                            <div>
+                                <p class="font-bold text-royal-blue text-sm">${e.name}</p>
+                                <p class="text-xs text-cyan-blue">${e.date} ${MONTHS[e.month]}</p>
+                            </div>
+                            <button onclick="jumpToDate(${e.month}, ${e.date})" class="bg-royal-blue hover:bg-main-yellow hover:text-royal-blue text-pale-yellow text-xs font-semibold px-3 py-1.5 rounded-md transition-colors shadow-sm">
+                                Lihat
+                            </button>
+                        </div>
+                    `;
+                });
+                listHtml += `</div>`;
+                bodyBox.innerHTML = listHtml;
+            }
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('modalContentBox').classList.remove('scale-95');
+            document.getElementById('modalContentBox').classList.add('scale-100');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('eventModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('modalContentBox').classList.remove('scale-100');
+            document.getElementById('modalContentBox').classList.add('scale-95');
+        }
+
+        function jumpToDate(month, date) {
+            currentDate.setMonth(month);
+            selectedDate = date;
+            
+            closeModal();
+            
+            // Beri jeda sedikit untuk animasi tutup modal sebelum merender ulang kalender
+            setTimeout(() => {
+                renderCalendar();
+                renderDetails();
+                lucide.createIcons();
+                // Scroll halus ke atas agar panel detail terlihat
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 200);
+        }
+
+        // Inisialisasi saat halaman dimuat
+        window.onload = initCalendar;
+
+    </script>
+</body>
+</html>
