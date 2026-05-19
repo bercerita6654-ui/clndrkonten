@@ -211,18 +211,18 @@
         // Gabungkan semua event
         const allEvents = [...holidayData, ...schoolMoments, ...promoData, ...regionalMoments];
 
-        // Data Rutin Harian & Prompt yang disesuaikan untuk tema warna Vibrant Pop
-        const promptSuffix = `vibrant, modern, pop art aesthetic, eye-catching colors, highly detailed, 8k --ar 4:5`;
-        const promptSuffixSquare = `vibrant, modern, pop art aesthetic, eye-catching colors, highly detailed, 8k --ar 1:1`;
+        // Data Rutin Harian & Prompt yang disesuaikan untuk format POSTER dalam Bahasa Indonesia
+        const promptSuffix = `desain poster profesional, gaya pop art modern yang cerah, ada area kosong (copy space) untuk menulis teks, warna eye-catching, sangat detail, 8k --ar 4:5`;
+        const promptSuffixSquare = `desain poster promosi profesional, gaya pop art modern yang cerah, ada area kosong (copy space) untuk menulis teks, warna eye-catching, sangat detail, 8k --ar 1:1`;
 
         const dailyIdeas = [
-            { dayName: "Minggu", topic: "Relax, Journaling & Prep", format: "Aesthetic Video / Photo", description: "Konten santai. Tunjukkan ide journaling untuk self-care (me-time), atau ingatkan followers untuk mempersiapkan tas, binder, dan alat tulis untuk sekolah/kerja besok.", hashtags: "#SundayVibes #JournalingIdeas #PersiapanSekolah", imagePrompt: `A cozy Sunday morning aesthetic, a beautiful open bullet journal with creative doodles, surrounded by colorful markers, soft cozy blankets, Pinterest style photography, ${promptSuffix}` },
-            { dayName: "Senin", topic: "Monday Motivation & Planning", format: "Carousel / Single Image", description: "Awali minggu dengan produktif! Bagikan quote motivasi kerja/belajar yang ditulis tangan (lettering). Tampilkan buku agenda atau sticky notes.", hashtags: "#MondayMotivation #PlannerAddict #SemangatSenin", imagePrompt: `A clean, bright workspace, an open weekly planner filled with neat tasks, neon sticky notes on a sleek laptop, motivational and productive atmosphere, bright lighting, ${promptSuffixSquare}` },
-            { dayName: "Selasa", topic: "Tips & Trik Edukatif", format: "Reels / Infografis", description: "Bagikan tips seputar alat tulis. Contoh: 'Cara menghilangkan noda tinta', 'Perbedaan pulpen gel vs ballpoint', atau 'Tips mencatat estetik'.", hashtags: "#TipsATK #StudygramIndonesia #AlatTulis", imagePrompt: `A macro photography close up showing the difference between a gel pen tip and a ballpoint pen tip drawing lines on premium textured paper, dynamic and colorful lighting, ${promptSuffix}` },
-            { dayName: "Rabu", topic: "Product Spotlight / Review", format: "Video Pendek / Photo Post", description: "Fokus pada satu produk unggulan. Tunjukkan detailnya (swatches warna spidol, ketebalan kertas). Buat review jujur atau repost testimoni.", hashtags: "#ReviewAlatTulis #RekomendasiATK", imagePrompt: `A satisfying swatch sheet of vibrant brush markers on thick white paper, the colorful markers are laid neatly beside the swatches, bright studio lighting, professional product photography, ${promptSuffixSquare}` },
-            { dayName: "Kamis", topic: "Interaksi & Engagement", format: "Instagram Story / Polling", description: "Buat game 'This or That' (Pulpen Biru vs Hitam, Buku Garis vs Polos). Atau tebak-tebakan seputar perlengkapan sekolah/kantor.", hashtags: "#StationeryAddict #Interaksi #BukuTulis", imagePrompt: `A split-screen composition showing an elegant violet pen on the left and a bright pink pen on the right, high quality product photography, 'this or that' aesthetic, ${promptSuffixSquare}` },
-            { dayName: "Jumat", topic: "Promo & Bundling Akhir Pekan", format: "Poster Promo / Flash Sale", description: "Sambut akhir pekan dengan penawaran khusus. Promosikan 'Paket Hemat Sekolah', diskon ongkir akhir pekan, atau promo Jumat Berkah.", hashtags: "#PromoATK #DiskonStationery #FlashSale", imagePrompt: `A beautifully curated bundle of colorful stationery sets tied together with a neon ribbon, eye-catching promotional image, modern e-commerce style, ${promptSuffix}` },
-            { dayName: "Sabtu", topic: "Behind the Scenes (BTS) & Hiburan", format: "Reels / TikTok (ASMR)", description: "Buat video ASMR packing orderan pelanggan, merapikan stok barang di rak toko, atau sekadar membagikan suasana toko yang estetik di akhir pekan.", hashtags: "#SmallBusinessIndonesia #PackingOrders #ASMR", imagePrompt: `A dynamic behind-the-scenes look of a person wrapping colorful stationery products in eco-friendly honeycomb paper, warm inviting lights, trendy small business aesthetic, ${promptSuffixSquare}` }
+            { dayName: "Minggu", topic: "Relax, Journaling & Prep", format: "Aesthetic Video / Photo", description: "Konten santai. Tunjukkan ide journaling untuk self-care (me-time), atau ingatkan followers untuk mempersiapkan tas, binder, dan alat tulis untuk sekolah/kerja besok.", hashtags: "#SundayVibes #JournalingIdeas #PersiapanSekolah", imagePrompt: `Poster santai hari Minggu, buku bullet journal terbuka dengan coretan estetik, dikelilingi spidol warna-warni dan selimut lembut, gaya fotografi Pinterest, ${promptSuffix}` },
+            { dayName: "Senin", topic: "Monday Motivation & Planning", format: "Carousel / Single Image", description: "Awali minggu dengan produktif! Bagikan quote motivasi kerja/belajar yang ditulis tangan (lettering). Tampilkan buku agenda atau sticky notes.", hashtags: "#MondayMotivation #PlannerAddict #SemangatSenin", imagePrompt: `Poster motivasi produktif, meja kerja yang cerah dan rapi, buku planner mingguan terbuka, sticky notes neon di laptop yang elegan, suasana penuh semangat, ${promptSuffixSquare}` },
+            { dayName: "Selasa", topic: "Tips & Trik Edukatif", format: "Reels / Infografis", description: "Bagikan tips seputar alat tulis. Contoh: 'Cara menghilangkan noda tinta', 'Perbedaan pulpen gel vs ballpoint', atau 'Tips mencatat estetik'.", hashtags: "#TipsATK #StudygramIndonesia #AlatTulis", imagePrompt: `Poster infografis edukasi, fotografi makro jarak dekat yang membedakan ujung pulpen gel dan ujung ballpoint saat menulis di atas kertas premium, pencahayaan dinamis, ${promptSuffix}` },
+            { dayName: "Rabu", topic: "Product Spotlight / Review", format: "Video Pendek / Photo Post", description: "Fokus pada satu produk unggulan. Tunjukkan detailnya (swatches warna spidol, ketebalan kertas). Buat review jujur atau repost testimoni.", hashtags: "#ReviewAlatTulis #RekomendasiATK", imagePrompt: `Poster review produk, kertas tebal berisi coretan swatch warna-warni dari spidol kuas, spidol diletakkan rapi di sebelahnya, pencahayaan studio yang terang, ${promptSuffixSquare}` },
+            { dayName: "Kamis", topic: "Interaksi & Engagement", format: "Instagram Story / Polling", description: "Buat game 'This or That' (Pulpen Biru vs Hitam, Buku Garis vs Polos). Atau tebak-tebakan seputar perlengkapan sekolah/kantor.", hashtags: "#StationeryAddict #Interaksi #BukuTulis", imagePrompt: `Poster interaktif this or that, komposisi layar terbelah menampilkan pulpen violet elegan di sisi kiri dan pulpen pink cerah di sisi kanan, fotografi produk estetik, ${promptSuffixSquare}` },
+            { dayName: "Jumat", topic: "Promo & Bundling Akhir Pekan", format: "Poster Promo / Flash Sale", description: "Sambut akhir pekan dengan penawaran khusus. Promosikan 'Paket Hemat Sekolah', diskon ongkir akhir pekan, atau promo Jumat Berkah.", hashtags: "#PromoATK #DiskonStationery #FlashSale", imagePrompt: `Poster promosi flash sale, tumpukan set alat tulis yang dibungkus cantik diikat dengan pita neon, gambar penawaran e-commerce yang sangat menarik perhatian, ${promptSuffix}` },
+            { dayName: "Sabtu", topic: "Behind the Scenes (BTS) & Hiburan", format: "Reels / TikTok (ASMR)", description: "Buat video ASMR packing orderan pelanggan, merapikan stok barang di rak toko, atau sekadar membagikan suasana toko yang estetik di akhir pekan.", hashtags: "#SmallBusinessIndonesia #PackingOrders #ASMR", imagePrompt: `Poster behind the scenes estetik, seseorang sedang membungkus pesanan produk alat tulis dengan kertas ramah lingkungan, lampu hangat yang mengundang, suasana bisnis kecil kekinian, ${promptSuffixSquare}` }
         ];
 
         const generateContentIdea = (event) => {
@@ -232,7 +232,7 @@
                     format: "Poster Promo / Live Shopping / Reels",
                     description: `Waktunya dorong penjualan! Siapkan 'Paket Bundling ATK', Flash Sale buku & pulpen, dan ingatkan followers untuk klaim voucher Gratis Ongkir. Lakukan Live Shopping untuk konversi maksimal.`,
                     hashtags: `#PromoATK #DiskonAlatTulis #Promo${event.date}${event.month+1}`,
-                    imagePrompt: `A vibrant e-commerce promotional 3D banner for stationery products, featuring floating neon notebooks, pens, and glowing 3D text "MEGA SALE", highly detailed, high quality, appealing energetic lighting, ${promptSuffixSquare}`
+                    imagePrompt: `Poster promosi e-commerce 3D yang cerah untuk produk alat tulis, menampilkan buku catatan dan pulpen neon melayang, teks 3D bersinar bertuliskan "MEGA SALE", layout dinamis, ${promptSuffixSquare}`
                 };
             }
 
@@ -242,70 +242,70 @@
                     format: "Reels / Carousel",
                     description: "Tunjukkan koleksi planner, buku catatan, dan pulpen premium untuk memulai tahun dengan rapi. Ajakan: 'Apa resolusi menulismu tahun ini?'",
                     hashtags: "#TahunBaru #Resolusi2026 #PlannerAddict",
-                    imagePrompt: `A beautiful flat lay of a blank modern 2026 planner, surrounded by premium colorful pens, colorful confetti, celebratory and energetic aesthetic, ${promptSuffix}`
+                    imagePrompt: `Poster ucapan tahun baru, flat lay buku planner 2026 modern yang kosong, dikelilingi pulpen premium berwarna-warni dan konfeti perayaan, estetika energik, ${promptSuffix}`
                 },
                 "Hari Suci Nyepi (Tahun Baru Saka 1948)": {
                     topic: "Ketenangan & Menulis Reflektif",
                     format: "Quote Graphic",
                     description: "Quote tentang ketenangan dan pentingnya menulis jurnal saat hening. Promosikan buku jurnal blank/dotted.",
                     hashtags: "#Nyepi #Journaling #Mindfulness",
-                    imagePrompt: `A serene workspace, a single high-quality blank journal and a sleek pen, dim moody but colorful lighting (bi-sexual lighting), feeling of silence, ${promptSuffix}`
+                    imagePrompt: `Poster bernuansa tenang, satu buku jurnal kosong berkualitas tinggi dan pulpen elegan di atas meja, pencahayaan redup yang estetik dan reflektif, suasana hening, ${promptSuffix}`
                 },
                 "Idul Fitri 1447 H": {
                     topic: "Kartu Ucapan & Hampers Lebaran",
                     format: "Video Tutorial / Carousel",
                     description: "Tutorial membuat kartu ucapan lebaran DIY. Tawarkan 'Hampers ATK Estetik' untuk hadiah anak/keponakan.",
                     hashtags: "#IdulFitri #Lebaran #HampersLebaran #KartuUcapan",
-                    imagePrompt: `A beautifully crafted handmade Eid greeting card written with elegant calligraphy pens, surrounded by colorful art supplies and a nicely wrapped gift box, joyful lighting, ${promptSuffixSquare}`
+                    imagePrompt: `Poster ucapan hari raya Idul Fitri yang indah, kartu ucapan buatan tangan dengan kaligrafi elegan, dikelilingi alat seni dan kotak hadiah yang dibungkus rapi, pencahayaan gembira, ${promptSuffixSquare}`
                 },
                 "Idul Adha 1447 H": {
                     topic: "Semangat Berkurban & Berbagi",
                     format: "Quote / Carousel",
                     description: "Ucapan Idul Adha. Sisipkan ide berbagi dengan mendonasikan alat tulis ke panti asuhan.",
                     hashtags: "#IdulAdha #BerbagiKebaikan #AlatTulis",
-                    imagePrompt: `Beautifully wrapped colorful stationery gift boxes ready to be donated, surrounded by soft ribbons, warm and generous atmosphere, ${promptSuffix}`
+                    imagePrompt: `Poster donasi amal, kotak hadiah alat tulis warna-warni yang dibungkus indah siap untuk didonasikan, dikelilingi pita lembut, suasana hangat dan penuh kepedulian, ${promptSuffix}`
                 },
                 "Proklamasi Kemerdekaan RI": {
                     topic: "Semangat Kemerdekaan & Lomba",
                     format: "Giveaway / Reel",
                     description: "Giveaway produk ATK. Tunjukkan alat lukis/gambar untuk persiapan lomba 17-an di sekolah.",
                     hashtags: "#HUTRI #17Agustus #LombaGambar",
-                    imagePrompt: `A dynamic and creative layout of art supplies, red and white colored pencils, and paints, energetic national pride aesthetic, bright studio lighting, ${promptSuffixSquare}`
+                    imagePrompt: `Poster perayaan hari kemerdekaan yang dinamis, tata letak alat seni kreatif, pensil warna merah putih, dan cat, estetika kebanggaan nasional yang energik, ${promptSuffixSquare}`
                 },
                 "Awal Semester Genap": {
                     topic: "Restock Kebutuhan Sekolah",
                     format: "Checklist Graphic",
                     description: "Checklist barang yang sering habis di tengah tahun (isi binder, pulpen tinta). Promo bundle hemat semester genap.",
                     hashtags: "#SemesterGenap #BackToSchool",
-                    imagePrompt: `A neat and colorful flat lay of essential school supplies, loose leaf papers, neon highlighters, correction tape, back to school aesthetic, bright and clean, ${promptSuffix}`
+                    imagePrompt: `Poster kembali ke sekolah, flat lay perlengkapan sekolah esensial yang rapi dan berwarna, kertas binder, stabilo neon, tip-ex, desain bersih dan cerah, ${promptSuffix}`
                 },
                 "Tahun Ajaran Baru / Back to School": {
                     topic: "Persiapan Back to School",
                     format: "Live Shopping / Video Tour",
                     description: "Momen puncak! Video unboxing tas sekolah dan bundle alat tulis lengkap. Kampanye 'Siap Sekolah'.",
                     hashtags: "#BackToSchool #TahunAjaranBaru",
-                    imagePrompt: `An exciting 3D composition of a trendy bright school backpack bursting open with colorful stationery, notebooks, markers flying out playfully, energetic back to school theme, 8k render, ${promptSuffixSquare}`
+                    imagePrompt: `Poster promosi diskon 3D yang seru, tas ransel sekolah trendi yang terbuka dengan buku catatan dan spidol warna-warni berhamburan keluar dengan riang, render 8k, ${promptSuffixSquare}`
                 },
                 "Hari Guru Nasional": {
                     topic: "Apresiasi Pahlawan Pendidikan",
                     format: "Gift Guide",
                     description: "Ide hadiah elegan untuk guru: Pulpen eksklusif, agenda. Diskon khusus untuk guru.",
                     hashtags: "#HariGuruNasional #KadoUntukGuru",
-                    imagePrompt: `A vibrant and elegant gift box containing a colorful fountain pen and a fine agenda, resting on a clean desk, dynamic and classy lighting, ${promptSuffix}`
+                    imagePrompt: `Poster apresiasi elegan, kotak hadiah berisi pulpen mahal warna-warni dan buku agenda premium di atas meja bersih, pencahayaan dinamis dan berkelas, ${promptSuffix}`
                 },
                 "Hari Raya Saraswati": {
                     topic: "Hari Ilmu Pengetahuan",
                     format: "Quote Graphic / Promo",
                     description: "Rahajeng Saraswati! Tawarkan diskon khusus untuk pelajar (buku tulis, alat lukis, dan kaligrafi).",
                     hashtags: "#Saraswati #IlmuPengetahuan",
-                    imagePrompt: `A beautiful and serene arrangement of thick books and colorful modern stationery placed next to a traditional Balinese offering, soft glowing colorful light, celebration of knowledge, ${promptSuffixSquare}`
+                    imagePrompt: `Poster perayaan ilmu pengetahuan yang damai, susunan buku tebal dan alat tulis modern diletakkan secara estetik di dekat sesajen tradisional Bali, cahaya warna-warni lembut, ${promptSuffixSquare}`
                 },
                 "Hari Raya Galungan": {
                     topic: "Kreativitas Menyambut Galungan",
                     format: "Greeting Post / Reels",
                     description: "Rahajeng Galungan. Buat video tutorial membuat hiasan dari kertas warna dan alat lukis ATK.",
                     hashtags: "#Galungan #BalineseCulture",
-                    imagePrompt: `A creative flatlay combining bright art papers, scissors, and colorful markers, arranged beautifully, joyful and vibrant atmosphere, festive holiday vibe, ${promptSuffix}`
+                    imagePrompt: `Poster perayaan kreatif, perpaduan kertas lipat cerah, gunting, dan spidol warna yang disusun estetik, suasana gembira, getaran hari raya yang meriah, ${promptSuffix}`
                 }
             };
 
@@ -314,7 +314,7 @@
                 format: "Photo Post / Story",
                 description: `Manfaatkan momen ${event.name} ini. Tampilkan produk ATK yang relevan dengan tema hari ini atau berikan ucapan spesial kepada audiens Anda.`,
                 hashtags: "#Stationery #AlatTulisKantor",
-                imagePrompt: `A beautiful and eye-catching arrangement of various stationery products, modern colorful notebooks and pens, creative lighting, high quality product photography, ${promptSuffixSquare}`
+                imagePrompt: `Desain poster estetik yang menarik perhatian, susunan berbagai produk alat tulis modern seperti buku catatan dan pulpen berwarna, pencahayaan kreatif, ${promptSuffixSquare}`
             };
 
             return ideas[event.name] || defaultIdea;
