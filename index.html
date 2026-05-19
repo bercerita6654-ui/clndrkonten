@@ -543,12 +543,14 @@
         function buildContentCard(data, label, badgeClass, icon, isEvent) {
             const promptId = `prompt-${Math.random().toString(36).substr(2, 9)}`;
             
-            // Konfigurasi Final Prompt Dinamis berdasarkan Prinsip Desain Poster
-            const colorPalette = "wajib menggunakan palet warna brand secara ketat dengan kontras tinggi agar elemen penting menonjol: Cyan Blue (#00ACDF), Pale Cyan (#D4F6FF), Royal Blue (#2696E4), Yellow (#FFEA86), dan Pale Yellow (#FFF8DB)";
-            const typographyLayout = "tata letak tipografi bersih dengan area kosong (copy space) yang luas untuk menaruh Judul Besar dan tebal (bold headline) yang memancing rasa ingin tahu, serta ruang untuk teks singkat/bullet points (maksimal 2 jenis font)";
-            const visualQuality = "visual berkualitas tinggi, tajam, komposisi bersih dan tidak menumpuk (tidak terlalu ramai), elemen produk alat tulis menjadi fokus utama";
-            
-            const finalPromptText = `Desain poster/flyer alat tulis. ${data.basePrompt}. Gaya visual: ${currentStyle}. ${typographyLayout}. ${visualQuality}. ${colorPalette}. Resolusi tinggi 8k, sangat detail --ar ${currentAR}`;
+            // Konfigurasi Prompt AI Menggunakan Formula R-T-A-V-K
+            const role = "Bertindaklah sebagai desainer grafis profesional dan ahli marketing media sosial.";
+            const task = `Buatkan gambar visual untuk desain poster/flyer promosi alat tulis dengan topik: "${data.topic}".`;
+            const audience = "Target audiens: Pelajar, mahasiswa, guru, dan pekerja kantoran (Gen Z & Milenial).";
+            const visual = `Gaya visual: ${currentStyle}. Aturan Desain: Tata letak tipografi bersih, sediakan area kosong (copy space) yang luas untuk menaruh Judul Besar dan tebal (bold headline) yang memancing rasa ingin tahu, serta ruang untuk teks bullet points (maksimal 2 jenis font). Visual harus berkualitas tinggi, tajam, komposisi bersih dan tidak menumpuk. Warna & Branding: WAJIB menggunakan palet warna ini secara ketat dengan kontras tinggi agar elemen penting menonjol: Cyan Blue (#00ACDF), Pale Cyan (#D4F6FF), Royal Blue (#2696E4), Yellow (#FFEA86), dan Pale Yellow (#FFF8DB).`;
+            const keyInfo = `Detail penting yang wajib masuk ke gambar: ${data.basePrompt}. Format gambar: Resolusi tinggi 8k, sangat detail --ar ${currentAR}.`;
+
+            const finalPromptText = `[Role] ${role}\n[Task] ${task}\n[Audience] ${audience}\n[Visual/Tone] ${visual}\n[Key Info] ${keyInfo}`;
 
             const cardBg = isEvent ? 'bg-white' : 'bg-gray-50';
             const cardBorder = isEvent ? 'border-pop-pink/30 shadow-md shadow-pop-pink/5' : 'border-gray-200';
@@ -580,21 +582,24 @@
                     <div class="bg-pop-dark rounded-2xl overflow-hidden shadow-lg mt-2 group/prompt">
                         <div class="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700">
                             <span class="text-xs font-bold text-pop-pink flex items-center gap-2">
-                                <i data-lucide="sparkles" class="w-4 h-4"></i> AI Image Prompt (Auto-Generated)
+                                <i data-lucide="sparkles" class="w-4 h-4"></i> AI Prompt (Formula R-T-A-V-K)
                             </span>
-                            <button onclick="copyToClipboard('${finalPromptText.replace(/'/g, "\\'")}', this)" class="text-gray-400 hover:text-white bg-gray-700 hover:bg-pop-purple px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold transition-all rounded-lg shadow-sm">
+                            <button onclick="copyToClipboard('${promptId}', this)" class="text-gray-400 hover:text-white bg-gray-700 hover:bg-pop-purple px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold transition-all rounded-lg shadow-sm">
                                 <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span class="btn-text">Copy</span>
                             </button>
                         </div>
                         <div class="p-4 relative">
-                            <p class="text-sm text-gray-300 font-mono leading-relaxed" id="${promptId}">${finalPromptText}</p>
+                            <p class="text-sm text-gray-300 font-mono leading-relaxed whitespace-pre-wrap" id="${promptId}">${finalPromptText}</p>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        async function copyToClipboard(text, btnElement) {
+        async function copyToClipboard(elementId, btnElement) {
+            const textElement = document.getElementById(elementId);
+            const text = textElement.innerText || textElement.textContent;
+
             const btnText = btnElement.querySelector('.btn-text');
             
             const showSuccess = () => {
