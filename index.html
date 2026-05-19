@@ -543,10 +543,12 @@
         function buildContentCard(data, label, badgeClass, icon, isEvent) {
             const promptId = `prompt-${Math.random().toString(36).substr(2, 9)}`;
             
-            // Konfigurasi Final Prompt Dinamis
-            const colorPalette = "wajib menggunakan secara ketat hanya palet warna ini: Cyan Blue (#00ACDF), Pale Cyan (#D4F6FF), Royal Blue (#2696E4), Yellow (#FFEA86), dan Pale Yellow (#FFF8DB)";
-            const copySpace = "sediakan area kosong (copy space) yang polos di salah satu sisi untuk tempat menaruh teks promosi";
-            const finalPromptText = `Desain poster alat tulis, ${data.basePrompt}. Gaya visual: ${currentStyle}. ${copySpace}. ${colorPalette}. Sangat detail, pencahayaan memukau, resolusi 8k --ar ${currentAR}`;
+            // Konfigurasi Final Prompt Dinamis berdasarkan Prinsip Desain Poster
+            const colorPalette = "wajib menggunakan palet warna brand secara ketat dengan kontras tinggi agar elemen penting menonjol: Cyan Blue (#00ACDF), Pale Cyan (#D4F6FF), Royal Blue (#2696E4), Yellow (#FFEA86), dan Pale Yellow (#FFF8DB)";
+            const typographyLayout = "tata letak tipografi bersih dengan area kosong (copy space) yang luas untuk menaruh Judul Besar dan tebal (bold headline) yang memancing rasa ingin tahu, serta ruang untuk teks singkat/bullet points (maksimal 2 jenis font)";
+            const visualQuality = "visual berkualitas tinggi, tajam, komposisi bersih dan tidak menumpuk (tidak terlalu ramai), elemen produk alat tulis menjadi fokus utama";
+            
+            const finalPromptText = `Desain poster/flyer alat tulis. ${data.basePrompt}. Gaya visual: ${currentStyle}. ${typographyLayout}. ${visualQuality}. ${colorPalette}. Resolusi tinggi 8k, sangat detail --ar ${currentAR}`;
 
             const cardBg = isEvent ? 'bg-white' : 'bg-gray-50';
             const cardBorder = isEvent ? 'border-pop-pink/30 shadow-md shadow-pop-pink/5' : 'border-gray-200';
